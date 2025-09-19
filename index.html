@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+  <!-- Basic Meta Information -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- Primary Meta Tags -->
+    <title>Xget URL 转换器</title>
+    <meta name="title" content="Xget URL 转换器" />
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <!-- Main Container -->
+    <div class="container">
+      <!-- Header Section -->
+      <header class="header">
+        <h1 class="title">Xget URL 转换器</h1>
+        <p class="subtitle">将支持平台的 URL 转换为加速的 Xget 格式</p>
+      </header>
+
+      <!-- Main Content -->
+      <main class="main">
+        <!-- URL Converter Section -->
+        <div class="converter-section">
+          <!-- URL Input -->
+          <div class="input-group">
+            <label for="original-url" class="label">原始 URL</label>
+            <input
+              type="url"
+              id="original-url"
+              class="input"
+              placeholder="在此粘贴支持平台的 URL"
+              autocomplete="off"
+              spellcheck="false"
+            />
+          </div>
+
+          <!-- Platform Detection Status -->
+          <div class="platform-status">
+            <span class="platform-indicator">
+              <span class="platform-dot"></span>
+              <span id="platform-name">⏳自动检测平台</span>
+            </span>
+          </div>
+
+          <!-- Conversion Result -->
+          <div id="result-section" class="result-section hidden">
+            <div class="input-group">
+              <label for="converted-url" class="label">转换后的 Xget URL</label>
+              <div class="output-container">
+                <input
+                  type="text"
+                  id="converted-url"
+                  class="input output"
+                  readonly
+                  placeholder="转换后的 URL 将显示在这里"
+                />
+                
+                <button id="copy-btn" class="copy-btn" title="复制到剪贴板">
+                  <span class="copy-icon">📋</span>
+                  <span class="copy-text">复制</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Error Messages -->
+          <div id="error-message" class="error-message hidden"></div>
+        </div>
+      </main>
+
+      <!-- Footer Section -->
+      <footer class="footer">
+        <div class="footer-content">
+          <p class="footer-text">
+            由
+            <a
+              href="https://github.com/xixu-me/Xget"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="footer-link"
+            >
+              Xget
+            </a>
+            提供支持
+          </p>
+          <p class="footer-links">
+          </p>
+          <p class="footer-copyright">
+            版权所有 &copy; 2025 XiXu 保留所有权利。
+          </p>
+        </div>
+      </footer>
+    </div>
+    <script type="module" src="js/script.js"></script>
+</body>
+</html>
