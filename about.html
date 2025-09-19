@@ -1,0 +1,1623 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xget使用文档</title>
+    <link rel="stylesheet" href="css/about.css" />
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h2>关于 Xget</h2>
+            <p>Xget 是一个高性能、安全的开发者资源访问加速引擎，为开发者提供跨多个平台的统一高效加速体验，涵盖代码存储库、包管理器、AI推理API、容器镜像、模型及数据集等。</p>
+        </div>
+        <div class="card">
+            <h2>🎯 使用说明</h2>
+            <h3>常用下载工具</h3>
+            
+            <h4>Git 操作</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 克隆存储库
+git clone https://xget.xi-xu.me/gh/microsoft/vscode.git
+
+# 克隆指定分支
+git clone -b main https://xget.xi-xu.me/gh/facebook/react.git
+
+# 浅克隆（仅最新提交）
+git clone --depth 1 https://xget.xi-xu.me/gh/torvalds/linux.git
+
+# 克隆 GitLab 存储库
+git clone https://xget.xi-xu.me/gl/gitlab-org/gitlab.git
+
+# 克隆 Gitea 存储库
+git clone https://xget.xi-xu.me/gitea/gitea/gitea.git
+
+# 克隆 Codeberg 存储库
+git clone https://xget.xi-xu.me/codeberg/forgejo/forgejo.git
+
+# 克隆 SourceForge 存储库
+git clone https://xget.xi-xu.me/sf/projects/mingw-w64/code.git
+
+# 克隆 AOSP 存储库
+git clone https://xget.xi-xu.me/aosp/platform/frameworks/base.git
+
+# 添加远程存储库
+git remote add upstream https://xget.xi-xu.me/gh/[所有者]/[存储库].git
+
+# 拉取更新
+git pull https://xget.xi-xu.me/gh/microsoft/vscode.git main
+
+# 子模块递归克隆
+git clone --recursive https://xget.xi-xu.me/gh/[用户名]/[带子模块的存储库].git</code></pre>
+            </div>
+            <h4>Git 全局加速配置</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 为特定域名配置 Git 使用 Xget
+git config --global url."https://xget.xi-xu.me/gh/".insteadOf "https://github.com/"
+git config --global url."https://xget.xi-xu.me/gl/".insteadOf "https://gitlab.com/"
+git config --global url."https://xget.xi-xu.me/gitea/".insteadOf "https://gitea.com/"
+git config --global url."https://xget.xi-xu.me/codeberg/".insteadOf "https://codeberg.org/"
+git config --global url."https://xget.xi-xu.me/sf/".insteadOf "https://sourceforge.net/"
+git config --global url."https://xget.xi-xu.me/aosp/".insteadOf "https://android.googlesource.com/"
+
+# 验证配置
+git config --global --get-regexp url
+
+# 现在所有相关平台的 git clone 都会自动使用 Xget
+git clone https://github.com/microsoft/vscode.git  # 自动转换为 Xget URL
+git clone https://gitlab.com/gitlab-org/gitlab.git  # 自动转换为 Xget URL
+git clone https://codeberg.org/forgejo/forgejo.git  # 自动转换为 Xget URL
+git clone https://android.googlesource.com/platform/frameworks/base.git  # 自动转换为 Xget URL</code></pre></div>
+            <h4>wget 下载</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 下载单个文件
+wget https://xget.xi-xu.me/gh/microsoft/vscode/archive/refs/heads/main.zip
+
+# 断点续传
+wget -c https://xget.xi-xu.me/hf/microsoft/DialoGPT-large/resolve/main/pytorch_model.bin
+
+# 批量下载
+wget -i urls.txt  # urls.txt 包含多个 Xget URL</code></pre></div>
+            <h4>curl 下载</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 基本下载
+curl -L -O https://xget.xi-xu.me/gh/golang/go/archive/refs/tags/go1.22.0.tar.gz
+
+# 显示进度条
+curl -L --progress-bar -o model.bin https://xget.xi-xu.me/hf/openai/whisper-large-v3/resolve/main/pytorch_model.bin
+
+# 设置用户代理
+curl -L -H "User-Agent: MyApp/1.0" https://xget.xi-xu.me/gl/gitlab-org/gitlab-runner/-/archive/main/gitlab-runner-main.zip</code></pre></div>
+            <h4>aria2 多线程下载</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 多线程下载大文件
+aria2c -x 16 -s 16 https://xget.xi-xu.me/hf/microsoft/DialoGPT-large/resolve/main/pytorch_model.bin
+
+# 断点续传
+aria2c -c https://xget.xi-xu.me/gh/microsoft/vscode/archive/refs/heads/main.zip
+
+# 批量下载配置文件
+aria2c -i download-list.txt  # 包含多个 Xget URL 的文件</code></pre>
+            </div>
+            <h4>Hugging Face 镜像</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+import os
+from transformers import AutoTokenizer, AutoModelForCausalLM
+
+# 设置环境变量，让 transformers 库自动使用 Xget 镜像
+os.environ['HF_ENDPOINT'] = 'https://xget.xi-xu.me/hf'
+
+# 定义模型名称
+model_name = 'microsoft/DialoGPT-medium'
+
+print(f"正在从镜像下载模型: {model_name}")
+
+# 使用 AutoModelForCausalLM 来加载对话生成模型
+# 由于上面设置了环境变量，这里无需添加任何额外参数
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModelForCausalLM.from_pretrained(model_name)
+
+print("模型和分词器加载成功！")
+
+# 你现在可以使用 tokenizer 和 model 了
+# 例如:
+# new_user_input_ids = tokenizer.encode("Hello, how are you?", return_tensors='pt')
+# chat_history_ids = model.generate(new_user_input_ids, max_length=1000, pad_token_id=tokenizer.eos_token_id)
+# print(tokenizer.decode(chat_history_ids[:, new_user_input_ids.shape[-1]:][0], skip_special_tokens=True))</code></pre>
+            </div>
+            <h4>Civitai AI 模型平台</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+import requests
+
+# 设置 API 基础 URL 使用 Xget
+base_url = "https://xget.xi-xu.me/civitai"
+
+# 获取模型信息
+def get_model_info(model_id):
+    """获取 Civitai 模型信息"""
+    url = f"{base_url}/api/v1/models/{model_id}"
+    response = requests.get(url)
+    return response.json()
+
+# 下载模型
+def download_model(model_version_id, output_path):
+    """下载 Civitai 模型文件"""
+    download_url = f"{base_url}/api/download/models/{model_version_id}"
+
+    print(f"正在下载模型版本 {model_version_id}...")
+
+    response = requests.get(download_url, stream=True)
+    response.raise_for_status()
+
+    with open(output_path, 'wb') as f:
+        for chunk in response.iter_content(chunk_size=8192):
+            f.write(chunk)
+
+    print(f"模型已下载到: {output_path}")
+
+# 使用示例
+model_id = 7240  # 示例模型 ID
+model_info = get_model_info(model_id)
+print(f"模型名称: {model_info['name']}")
+
+# 下载第一个模型版本
+if model_info['modelVersions']:
+    version_id = model_info['modelVersions'][0]['id']
+    download_model(version_id, f"model_{version_id}.safetensors")</code></pre>
+            </div>
+</div>
+        <div class="card">
+            <h3>包管理加速</h3>
+            
+            <h4>npm 包管理加速</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 临时使用 Xget 镜像
+npm install --registry https://xget.xi-xu.me/npm/
+
+# 全局配置 npm 镜像
+npm config set registry https://xget.xi-xu.me/npm/
+
+# 验证配置
+npm config get registry</code></pre>
+            </div>
+            <h4>在项目中使用</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+#在 .npmrc 文件中配置项目级镜像
+echo "registry=https://xget.xi-xu.me/npm/" > .npmrc
+
+# 安装依赖
+npm install
+
+# 或者使用 yarn
+yarn config set registry https://xget.xi-xu.me/npm/
+yarn install</code></pre>
+            </div>
+            <h4>Python pip 加速</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 临时使用 Xget 镜像
+pip install requests -i https://xget.xi-xu.me/pypi/simple/
+
+# 全局配置 pip 镜像
+pip config set global.index-url https://xget.xi-xu.me/pypi/simple/
+pip config set global.trusted-host xget.xi-xu.me
+
+# 验证配置
+pip config list</code></pre>
+            </div>
+            <h4>在项目中使用</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+## 创建 pip.conf 文件（Linux/macOS）
+mkdir -p ~/.pip
+cat > ~/.pip/pip.conf << EOF
+[global]
+index-url = https://xget.xi-xu.me/pypi/simple/
+trusted-host = xget.xi-xu.me
+EOF
+
+# 或在项目根目录创建 pip.conf
+cat > pip.conf << EOF
+[global]
+index-url = https://xget.xi-xu.me/pypi/simple/
+trusted-host = xget.xi-xu.me
+EOF
+
+# 使用配置文件安装
+pip install -r requirements.txt --config-file pip.conf</code></pre>
+            </div>
+            <h4>在 requirements.txt 中指定镜像</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# requirements.txt
+--index-url https://xget.xi-xu.me/pypi/simple/
+--trusted-host xget.xi-xu.me
+
+requests>=2.25.0
+numpy>=1.21.0
+pandas>=1.3.0
+matplotlib>=3.4.0</code></pre>
+            </div>
+            <h4>Conda 包管理加速</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 配置默认频道镜像
+conda config --add default_channels https://xget.xi-xu.me/conda/pkgs/msys2
+conda config --add default_channels https://xget.xi-xu.me/conda/pkgs/r
+conda config --add default_channels https://xget.xi-xu.me/conda/pkgs/main
+
+# 配置所有社区频道镜像（推荐）
+conda config --set channel_alias https://xget.xi-xu.me/conda/community
+
+# 或配置特定社区频道
+conda config --add channels https://xget.xi-xu.me/conda/community/conda-forge
+conda config --add channels https://xget.xi-xu.me/conda/community/bioconda
+
+# 设置频道优先级
+conda config --set channel_priority strict
+
+# 验证配置
+conda config --show</code></pre>
+            </div>
+            <h4>在 .condarc 中配置</h4>
+<p>.condarc 文件可以放在用户主目录（~/.condarc）或项目根目录下：</p>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+default_channels:
+  - https://xget.xi-xu.me/conda/pkgs/main
+  - https://xget.xi-xu.me/conda/pkgs/r
+  - https://xget.xi-xu.me/conda/pkgs/msys2
+channel_alias: https://xget.xi-xu.me/conda/community
+channel_priority: strict
+show_channel_urls: true</code></pre>
+            </div>
+            <h4>使用环境文件</h4>
+<p>环境文件中可以直接指定完整的镜像 URL：</p>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# environment.yml
+name: myproject
+channels:
+  - https://xget.xi-xu.me/conda/pkgs/main
+  - https://xget.xi-xu.me/conda/pkgs/r
+  - https://xget.xi-xu.me/conda/community/bioconda
+  - https://xget.xi-xu.me/conda/community/conda-forge
+dependencies:
+  - python=3.11
+  - numpy>=1.24.0
+  - pandas>=2.0.0
+  - matplotlib>=3.7.0
+  - scipy>=1.10.0
+  - pip
+  - pip:
+    - requests>=2.28.0</code></pre>
+            </div>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 使用环境文件创建环境
+conda env create -f environment.yml
+
+# 更新环境
+conda env update -f environment.yml</code></pre>
+            </div>
+            <h4>Maven 包管理加速</h4>
+<p>配置 Maven 使用 Xget 镜像</p>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+&lt;!-- 在 ~/.m2/settings.xml 中配置 Maven 镜像 --&gt;
+&lt;settings&gt;
+  &lt;mirrors&gt;
+    &lt;mirror&gt;
+      &lt;id&gt;xget-maven-central&lt;/id&gt;
+      &lt;mirrorOf&gt;central&lt;/mirrorOf&gt;
+      &lt;name&gt;Xget Maven Central Mirror&lt;/name&gt;
+      &lt;url&gt;https://xget.xi-xu.me/maven/maven2&lt;/url&gt;
+    &lt;/mirror&gt;
+  &lt;/mirrors&gt;
+&lt;/settings&gt;</code></pre>
+            </div>
+            <h4>在项目中使用</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+&lt;!-- 在 pom.xml 中配置项目级镜像 --&gt;
+&lt;project&gt;
+  &lt;repositories&gt;
+    &lt;repository&gt;
+      &lt;id&gt;xget-maven-central&lt;/id&gt;
+      &lt;name&gt;Xget Maven Central&lt;/name&gt;
+      &lt;url&gt;https://xget.xi-xu.me/maven/maven2&lt;/url&gt;
+    &lt;/repository&gt;
+  &lt;/repositories&gt;
+
+  &lt;pluginRepositories&gt;
+    &lt;pluginRepository&gt;
+      &lt;id&gt;xget-maven-central&lt;/id&gt;
+      &lt;name&gt;Xget Maven Central&lt;/name&gt;
+      &lt;url&gt;https://xget.xi-xu.me/maven/maven2&lt;/url&gt;
+    &lt;/pluginRepository&gt;
+  &lt;/pluginRepositories&gt;
+&lt;/project&gt;</code></pre>
+            </div>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 使用命令行指定镜像
+mvn clean install -Dmaven.repo.remote=https://xget.xi-xu.me/maven/maven2
+
+# 下载特定依赖
+mvn dependency:get -Dartifact=org.springframework:spring-core:5.3.21 \
+  -DremoteRepositories=https://xget.xi-xu.me/maven/maven2</code></pre>
+            </div>
+
+            <h4>Apache 软件下载加速</h4>
+<p>使用 Xget 下载 Apache 软件</p>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 下载 Apache Kafka
+wget https://xget.xi-xu.me/apache/kafka/3.6.1/kafka_2.13-3.6.1.tgz
+
+# 下载 Apache Maven
+curl -L -O https://xget.xi-xu.me/apache/maven/maven-3/3.9.5/binaries/apache-maven-3.9.5-bin.tar.gz
+
+# 下载 Apache Spark
+aria2c https://xget.xi-xu.me/apache/spark/spark-3.5.0/spark-3.5.0-bin-hadoop3.tgz
+
+# 下载 Apache Hadoop
+wget https://xget.xi-xu.me/apache/hadoop/common/hadoop-3.3.6/hadoop-3.3.6.tar.gz
+
+# 下载 Apache Flink
+curl -L -O https://xget.xi-xu.me/apache/flink/flink-1.18.1/flink-1.18.1-bin-scala_2.12.tgz</code></pre>
+            </div>
+            <h4>常用 Apache 软件下载</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 大数据相关
+wget https://xget.xi-xu.me/apache/hive/hive-3.1.3/apache-hive-3.1.3-bin.tar.gz
+wget https://xget.xi-xu.me/apache/hbase/2.5.7/hbase-2.5.7-bin.tar.gz
+wget https://xget.xi-xu.me/apache/zookeeper/zookeeper-3.8.4/apache-zookeeper-3.8.4-bin.tar.gz
+
+# Web 服务器
+wget https://xget.xi-xu.me/apache/httpd/httpd-2.4.59.tar.gz
+wget https://xget.xi-xu.me/apache/tomcat/tomcat-10/v10.1.19/bin/apache-tomcat-10.1.19.tar.gz
+
+# 开发工具
+wget https://xget.xi-xu.me/apache/ant/1.10.14/apache-ant-1.10.14-bin.tar.gz
+wget https://xget.xi-xu.me/apache/netbeans/netbeans/20/netbeans-20-bin.zip</code></pre>
+            </div>
+
+            <h4>Gradle 包管理加速</h4>
+<p>配置 Gradle 使用 Xget 镜像</p>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+// 在 build.gradle 中配置 Gradle 镜像
+repositories {
+    maven {
+        url 'https://xget.xi-xu.me/maven/maven2'
+    }
+    gradlePluginPortal {
+        url 'https://xget.xi-xu.me/gradle/m2'
+    }
+}
+
+// 配置插件仓库
+pluginManagement {
+    repositories {
+        maven {
+            url 'https://xget.xi-xu.me/gradle/m2'
+        }
+        gradlePluginPortal()
+    }
+}</code></pre>
+            </div>
+            <h4>全局配置</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+// 在 ~/.gradle/init.gradle 中配置全局镜像
+allprojects {
+    repositories {
+        maven {
+            url 'https://xget.xi-xu.me/maven/maven2'
+        }
+    }
+}
+
+settingsEvaluated { settings ->
+    settings.pluginManagement {
+        repositories {
+            maven {
+                url 'https://xget.xi-xu.me/gradle/m2'
+            }
+            gradlePluginPortal()
+        }
+    }
+}</code></pre>
+            </div>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 使用命令行指定镜像
+gradle build -Dmaven.repo.remote=https://xget.xi-xu.me/maven/maven2
+
+# 刷新依赖
+gradle build --refresh-dependencies</code></pre>
+            </div>
+            <h4>Homebrew 包管理加速</h4>
+<p>配置 Homebrew 使用 Xget 镜像</p>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 设置 Homebrew 环境变量使用 Xget 镜像
+export HOMEBREW_BREW_GIT_REMOTE="https://xget.xi-xu.me/homebrew/brew.git"
+export HOMEBREW_CORE_GIT_REMOTE="https://xget.xi-xu.me/homebrew/homebrew-core.git"
+export HOMEBREW_API_DOMAIN="https://xget.xi-xu.me/homebrew/api"
+export HOMEBREW_BOTTLE_DOMAIN="https://xget.xi-xu.me/homebrew/bottles"
+
+# 更新 Homebrew
+brew update</code></pre>
+            </div>
+            <h4>长期配置</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 为 bash 用户添加到 ~/.bash_profile
+echo 'export HOMEBREW_BREW_GIT_REMOTE="https://xget.xi-xu.me/homebrew/brew.git"' >> ~/.bash_profile
+echo 'export HOMEBREW_CORE_GIT_REMOTE="https://xget.xi-xu.me/homebrew/homebrew-core.git"' >> ~/.bash_profile
+echo 'export HOMEBREW_API_DOMAIN="https://xget.xi-xu.me/homebrew/api"' >> ~/.bash_profile
+echo 'export HOMEBREW_BOTTLE_DOMAIN="https://xget.xi-xu.me/homebrew/bottles"' >> ~/.bash_profile
+
+# 为 zsh 用户添加到 ~/.zprofile
+echo 'export HOMEBREW_BREW_GIT_REMOTE="https://xget.xi-xu.me/homebrew/brew.git"' >> ~/.zprofile
+echo 'export HOMEBREW_CORE_GIT_REMOTE="https://xget.xi-xu.me/homebrew/homebrew-core.git"' >> ~/.zprofile
+echo 'export HOMEBREW_API_DOMAIN="https://xget.xi-xu.me/homebrew/api"' >> ~/.zprofile
+echo 'export HOMEBREW_BOTTLE_DOMAIN="https://xget.xi-xu.me/homebrew/bottles"' >> ~/.zprofile</code></pre>
+            </div>
+            <h4>在项目中使用</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 安装软件包
+brew install git
+
+# 搜索软件包
+brew search python
+
+# 更新软件包
+brew upgrade
+
+# 查看已安装软件包
+brew list</code></pre>
+            </div>
+
+            <h4>验证镜像配置</h4>
+<p>配置 Homebrew 使用 Xget 镜像</p>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 检查 Homebrew 配置
+brew config
+
+# 查看环境变量
+echo $HOMEBREW_API_DOMAIN
+echo $HOMEBREW_BOTTLE_DOMAIN</code></pre>
+            </div>
+
+            <h4>Ruby 包管理加速</h4>
+<p>配置 RubyGems 使用 Xget 镜像</p>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 临时使用 Xget 镜像
+gem install rails --source https://xget.xi-xu.me/rubygems/
+
+# 全局配置 RubyGems 镜像
+gem sources --add https://xget.xi-xu.me/rubygems/
+gem sources --remove https://rubygems.org/
+
+# 验证配置
+gem sources -l</code></pre>
+            </div>
+            <h4>在项目中使用</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 在 Gemfile 中配置项目级镜像
+source 'https://xget.xi-xu.me/rubygems/'
+
+gem 'rails', '~> 7.0.0'
+gem 'pg', '~> 1.1'
+gem 'puma', '~> 5.0'</code></pre>
+            </div>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 使用 bundle 安装
+bundle config mirror.https://rubygems.org https://xget.xi-xu.me/rubygems/
+bundle install</code></pre>
+            </div>
+            
+            <h4>R 包管理加速</h4>
+<p>配置 R 使用 Xget CRAN 镜像</p>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 在 R 中临时使用 Xget CRAN 镜像
+install.packages("ggplot2", repos = "https://xget.xi-xu.me/cran/")
+
+# 全局配置 CRAN 镜像
+options(repos = c(CRAN = "https://xget.xi-xu.me/cran/"))
+
+# 验证配置
+getOption("repos")</code></pre>
+            </div>
+            <h4>在 .Rprofile 中配置</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 在用户主目录的 .Rprofile 文件中配置全局镜像
+options(repos = c(
+  CRAN = "https://xget.xi-xu.me/cran/",
+  BioCsoft = "https://bioconductor.org/packages/release/bioc",
+  BioCann = "https://bioconductor.org/packages/release/data/annotation",
+  BioCexp = "https://bioconductor.org/packages/release/data/experiment"
+))
+
+# 设置下载方法
+options(download.file.method = "libcurl")</code></pre>
+            </div>
+
+            <h4>在项目中使用</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 在项目的 renv.lock 或脚本中指定镜像
+renv::init()
+renv::settings$repos.override(c(CRAN = "https://xget.xi-xu.me/cran/"))
+
+# 安装包
+install.packages(c("dplyr", "ggplot2", "tidyr"))
+
+# 或使用 pak 包管理器
+pak::pkg_install("tidyverse", repos = "https://xget.xi-xu.me/cran/")</code></pre>
+            </div>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 在命令行中使用 R 脚本安装包
+Rscript -e "options(repos = c(CRAN = 'https://xget.xi-xu.me/cran/')); install.packages('ggplot2')"
+
+# 批量安装包
+Rscript -e "
+options(repos = c(CRAN = 'https://xget.xi-xu.me/cran/'))
+packages <- c('dplyr', 'ggplot2', 'tidyr', 'readr')
+install.packages(packages)
+"</code></pre></div>
+            <h4>Perl 包管理加速</h4>
+<p>配置 CPAN 使用 Xget 镜像</p>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 配置 CPAN 使用 Xget 镜像
+cpan o conf urllist push https://xget.xi-xu.me/cpan/
+cpan o conf commit
+
+# 或者直接编辑配置文件 ~/.cpan/CPAN/MyConfig.pm
+# 添加：
+# 'urllist' => [q[https://xget.xi-xu.me/cpan/]],</code></pre>
+            </div>
+            <h4>使用 cpanm 安装模块</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 安装 cpanm（如果没有）
+curl -L https://cpanmin.us | perl - --sudo App::cpanminus
+
+# 使用 Xget 镜像安装模块
+cpanm --mirror https://xget.xi-xu.me/cpan/ DBI
+cpanm --mirror https://xget.xi-xu.me/cpan/ Mojolicious
+
+# 从 Makefile.PL 安装依赖
+cpanm --mirror https://xget.xi-xu.me/cpan/ --installdeps .</code></pre>
+            </div>
+
+            <h4>在项目中使用</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 在 cpanfile 中列出依赖
+requires 'DBI';
+requires 'Mojolicious';
+requires 'JSON';
+
+# 然后使用 Xget 镜像安装
+cpanm --mirror https://xget.xi-xu.me/cpan/ --installdeps .</code></pre>
+            </div>
+            <h4>TeX/LaTeX 包管理加速</h4>
+<p>TeX/LaTeX 包管理加速</p>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 配置 tlmgr 使用 Xget CTAN 镜像
+tlmgr option repository https://xget.xi-xu.me/ctan/systems/texlive/tlnet
+
+# 更新包数据库
+tlmgr update --self --all
+
+# 安装包
+tlmgr install beamer
+tlmgr install tikz</code></pre>
+            </div>
+            <h4>配置 MiKTeX 使用 Xget 镜像</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# Windows MiKTeX 配置
+mpm --set-repository=https://xget.xi-xu.me/ctan/systems/win32/miktex
+
+# 更新包数据库
+mpm --update-db
+
+# 安装包
+mpm --install=beamer
+mpm --install=pgf</code></pre>
+            </div>
+
+            <h4>在项目中使用</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# LaTeX 文档编译时自动安装缺失包
+pdflatex --shell-escape document.tex
+
+# 或手动安装特定包
+tlmgr install caption
+tlmgr install subcaption
+tlmgr install algorithm2e</code></pre>
+            </div>
+            <h4>Go 模块加速</h4>
+<p>配置 Go 使用 Xget 代理</p>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 配置 Go 模块代理
+export GOPROXY=https://xget.xi-xu.me/golang,direct
+export GOSUMDB=off
+
+# 或者永久配置
+go env -w GOPROXY=https://xget.xi-xu.me/golang,direct
+go env -w GOSUMDB=off
+
+# 验证配置
+go env GOPROXY</code></pre>
+            </div>
+            <h4>在项目中使用</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 下载依赖
+go mod download
+
+# 更新依赖
+go get -u ./...
+
+# 清理模块缓存
+go clean -modcache</code></pre>
+            </div>
+            <h4>NuGet 包管理加速</h4>
+<p>配置 NuGet 使用 Xget 镜像</p>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 添加 Xget 包源
+dotnet nuget add source https://xget.xi-xu.me/nuget/v3/index.json -n xget
+
+# 列出包源
+dotnet nuget list source
+
+# 在项目中使用
+dotnet restore --source https://xget.xi-xu.me/nuget/v3/index.json</code></pre>
+            </div>
+            <h4>在 NuGet.Config 中配置</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 在 NuGet.Config 中配置
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;configuration&gt;
+  &lt;packageSources&gt;
+    &lt;add key="xget" value="https://xget.xi-xu.me/nuget/v3/index.json" /&gt;
+  &lt;/packageSources&gt;
+&lt;/configuration&gt;</code></pre>
+            </div>
+            <h4>Rust 包管理加速</h4>
+<p>配置 Cargo 使用 Xget 镜像</p>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 配置 Cargo 使用 Xget 镜像（在 ~/.cargo/config.toml 中）
+mkdir -p ~/.cargo
+cat >> ~/.cargo/config.toml << EOF
+[source.crates-io]
+replace-with = "xget"
+
+[source.xget]
+registry = "https://xget.xi-xu.me/crates/"
+EOF
+
+# 验证配置
+cargo search serde</code></pre>
+            </div>
+            <h4>在项目中使用</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 在 Cargo.toml 中可以正常使用依赖
+[dependencies]
+serde = "1.0"
+tokio = "1.0"
+reqwest = "0.11"</code></pre>
+            </div>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 构建项目时会自动使用 Xget
+cargo build
+
+# 更新依赖
+cargo update
+
+# 添加新依赖
+cargo add clap</code></pre>
+            </div>
+
+            <h4>PHP 包管理加速</h4>
+<p>配置 Composer 使用 Xget 镜像</p>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 全局配置 Composer 镜像
+composer config -g repo.packagist composer https://xget.xi-xu.me/packagist/
+
+# 项目级配置
+composer config repo.packagist composer https://xget.xi-xu.me/packagist/
+
+# 验证配置
+composer config -l</code></pre>
+            </div>
+            <h4>在 composer.json 中配置</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+{
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://xget.xi-xu.me/packagist/"
+    }
+  ],
+  "require": {
+    "symfony/console": "^6.0",
+    "guzzlehttp/guzzle": "^7.0"
+  }
+}</code></pre>
+            </div>
+</div>
+        <div class="card">
+            <h3>Linux 发行版加速</h3>
+<h4>Debian/Ubuntu APT 配置</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 备份原始源列表
+sudo cp /etc/apt/sources.list /etc/apt/sources.list.backup
+
+# 配置 Debian 镜像
+echo "deb https://xget.xi-xu.me/debian/debian bookworm main" | sudo tee /etc/apt/sources.list
+echo "deb https://xget.xi-xu.me/debian/debian-security bookworm-security main" | sudo tee -a /etc/apt/sources.list
+
+# 配置 Ubuntu 镜像
+echo "deb https://xget.xi-xu.me/ubuntu/ubuntu jammy main restricted universe multiverse" | sudo tee /etc/apt/sources.list
+echo "deb https://xget.xi-xu.me/ubuntu/ubuntu jammy-updates main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
+
+# 更新包列表
+sudo apt update</code></pre>
+            </div>
+            <h4>Fedora DNF 配置</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 配置 Fedora 镜像
+sudo sed -i 's|^metalink=|#metalink=|g' /etc/yum.repos.d/fedora*.repo
+sudo sed -i 's|^#baseurl=http://download.example/pub/fedora/linux|baseurl=https://xget.xi-xu.me/fedora/pub/fedora/linux|g' /etc/yum.repos.d/fedora*.repo
+
+# 更新包缓存
+sudo dnf makecache</code></pre>
+            </div>
+
+            <h4>Rocky Linux DNF 配置</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 配置 Rocky Linux 镜像
+sudo sed -i 's|^mirrorlist=|#mirrorlist=|g' /etc/yum.repos.d/rocky*.repo
+sudo sed -i 's|^#baseurl=http://dl.rockylinux.org|baseurl=https://xget.xi-xu.me/rocky|g' /etc/yum.repos.d/rocky*.repo
+
+# 更新包缓存
+sudo dnf makecache</code></pre>
+            </div>
+            <h4>openSUSE Zypper 配置</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 配置 openSUSE Leap 镜像
+sudo zypper mr -d repo-oss
+sudo zypper ar -f https://xget.xi-xu.me/opensuse/distribution/leap/15.5/repo/oss/ repo-oss-xget
+
+# 配置 openSUSE Tumbleweed 镜像
+sudo zypper mr -d repo-oss
+sudo zypper ar -f https://xget.xi-xu.me/opensuse/tumbleweed/repo/oss/ repo-oss-xget
+
+# 刷新软件源
+sudo zypper refresh
+
+# 验证配置
+sudo zypper lr -u</code></pre>
+            </div>
+
+            <h4>Arch Linux Pacman 配置</h4>
+<p>配置 Cargo 使用 Xget 镜像</p>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 备份原始镜像列表
+sudo cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
+
+# 配置 Arch Linux 镜像
+echo 'Server = https://xget.xi-xu.me/arch/$repo/os/$arch' | sudo tee /etc/pacman.d/mirrorlist
+
+# 更新包数据库
+sudo pacman -Sy</code></pre>
+            </div>
+</div>
+        <div class="card">
+            <h3>学术资源加速</h3>
+<h4>arXiv 论文下载</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 下载 arXiv 论文 PDF
+wget https://xget.xi-xu.me/arxiv/pdf/2301.07041.pdf
+
+# 下载论文源码
+curl -L -O https://xget.xi-xu.me/arxiv/e-print/2301.07041
+
+# 批量下载多篇论文
+for id in 2301.07041 2302.13971 2303.08774; do
+  wget https://xget.xi-xu.me/arxiv/pdf/${id}.pdf
+done</code></pre>
+            </div>
+            <h4>在学术工具中使用</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 在 Python 中使用 arXiv 加速下载
+import requests
+
+def download_arxiv_paper(arxiv_id, output_path):
+    url = f"https://xget.xi-xu.me/arxiv/pdf/{arxiv_id}.pdf"
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        with open(output_path, 'wb') as f:
+            f.write(response.content)
+        print(f"Downloaded {arxiv_id} to {output_path}")
+    else:
+        print(f"Failed to download {arxiv_id}")
+
+# 下载论文
+download_arxiv_paper("2301.07041", "attention_is_all_you_need.pdf")</code></pre>
+            </div>
+</div>
+        <div class="card">
+            <h3>F-Droid 存储库镜像</h3>
+<h4>配置 F-Droid 客户端使用 Xget 镜像</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+在 F-Droid 应用中进入设置 → 存储库
+点击 + 后输入存储库 URL：https://xget.xi-xu.me/fdroid/repo
+点击添加后再点击添加镜像</code></pre>
+            </div>
+            <h4>支持的 F-Droid 服务</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# F-Droid 应用 APK 下载
+https://xget.xi-xu.me/fdroid/repo/[包名]_[版本号].apk
+
+# F-Droid 存储库索引
+https://xget.xi-xu.me/fdroid/repo/index-v1.jar
+
+# F-Droid 应用图标
+https://xget.xi-xu.me/fdroid/repo/icons-640/[包名].[版本号].png
+
+# F-Droid API 接口
+https://xget.xi-xu.me/fdroid/api/v1/packages/[包名]</code></pre>
+            </div>
+
+            <h4>使用示例</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 直接下载 F-Droid 客户端 APK
+wget https://xget.xi-xu.me/fdroid/repo/org.fdroid.fdroid_1016050.apk
+
+# 下载其他开源应用
+curl -L -O https://xget.xi-xu.me/fdroid/repo/org.mozilla.fennec_fdroid_1014000.apk
+
+# 获取应用信息
+curl https://xget.xi-xu.me/fdroid/api/v1/packages/org.fdroid.fdroid</code></pre>
+            </div>
+            <h4>批量应用管理</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 创建应用下载脚本
+cat > download_fdroid_apps.sh << 'EOF'
+#!/bin/bash
+
+# 定义要下载的应用列表
+apps=(
+    "org.fdroid.fdroid_1016050.apk"
+    "org.mozilla.fennec_fdroid_1014000.apk"
+    "com.termux_1180.apk"
+    "org.videolan.vlc_13050399.apk"
+)
+
+# 创建下载目录
+mkdir -p fdroid_apps
+
+# 批量下载应用
+for app in "${apps[@]}"; do
+    echo "正在下载: $app"
+    wget -P fdroid_apps "https://xget.xi-xu.me/fdroid/repo/$app"
+done
+
+echo "所有应用下载完成！"
+EOF
+
+chmod +x download_fdroid_apps.sh
+./download_fdroid_apps.sh</code></pre>
+            </div>
+
+            <h4>开发者集成</h4>
+<p>对于 Android 开发者，可以在构建脚本中集成 F-Droid 镜像：</p>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+// 在 build.gradle 中配置 F-Droid 依赖检查
+task checkFDroidAvailability {
+    doLast {
+        def fdroidUrl = "https://xget.xi-xu.me/fdroid/api/v1/packages/${project.name}"
+        try {
+            def connection = new URL(fdroidUrl).openConnection()
+            connection.requestMethod = 'GET'
+            def responseCode = connection.responseCode
+            if (responseCode == 200) {
+                println "应用在 F-Droid 上可用: $fdroidUrl"
+            }
+        } catch (Exception e) {
+            println "检查 F-Droid 可用性时出错: ${e.message}"
+        }
+    }
+}</code></pre>
+            </div>
+</div>
+        <div class="card">
+            <h4>Jenkins 插件下载</h4>
+            <h4>使用 Xget 加速 Jenkins 插件下载和更新</h4>
+            <p>支持 Jenkins 更新中心和插件下载，兼容清华镜像等国内镜像源的配置方式。</p>
+            <h4>Jenkins 更新中心配置</h4>
+            <p>方法一：在 Jenkins Web 界面配置</p>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+登录 Jenkins 管理界面
+进入 Manage Jenkins → Plugins → Advanced
+在 Update Site 部分，将 URL 更改为：
+https://xget.xi-xu.me/jenkins/update-center.json
+点击 Submit 保存配置</code></pre>
+            </div>
+
+            <h4>方法二：修改配置文件</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 在 Jenkins 服务器上修改更新中心配置文件
+# 默认位置：$JENKINS_HOME/hudson.model.UpdateCenter.xml
+sudo nano /var/lib/jenkins/hudson.model.UpdateCenter.xml
+
+# 将 URL 改为：
+# <url>https://xget.xi-xu.me/jenkins/update-center.json</url>
+
+# 重启 Jenkins 服务
+sudo systemctl restart jenkins</code></pre></div>
+
+            <h4>支持的 Jenkins 服务</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# Jenkins 更新中心 JSON
+https://xget.xi-xu.me/jenkins/update-center.json
+
+# Jenkins 更新中心（实际 JSON 格式）
+https://xget.xi-xu.me/jenkins/update-center.actual.json
+
+# Jenkins 插件下载
+https://xget.xi-xu.me/jenkins/download/plugins/[插件名]/[版本]/[插件名].hpi
+
+# 实验性插件更新中心
+https://xget.xi-xu.me/jenkins/experimental/update-center.json</code></pre>
+            </div>
+            <h4>使用示例</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 下载 Maven 插件
+wget https://xget.xi-xu.me/jenkins/download/plugins/maven-plugin/3.27/maven-plugin.hpi
+
+# 下载 Git 插件
+curl -L -O https://xget.xi-xu.me/jenkins/download/plugins/git/5.2.1/git.hpi
+
+# 获取更新中心信息
+curl https://xget.xi-xu.me/jenkins/update-center.json
+
+# 批量下载常用插件
+cat > download_jenkins_plugins.sh << 'EOF'
+#!/bin/bash
+
+# 定义要下载的插件列表
+plugins=(
+    "git:5.2.1"
+    "maven-plugin:3.27"
+    "workflow-aggregator:596.v8c21c963d92d"
+    "blueocean:1.27.8"
+    "docker-workflow:563.vd5d2e5c4007f"
+)
+
+# 创建插件下载目录
+mkdir -p jenkins_plugins
+
+# 批量下载插件
+for plugin in "${plugins[@]}"; do
+    name=$(echo $plugin | cut -d: -f1)
+    version=$(echo $plugin | cut -d: -f2)
+    echo "正在下载插件: $name v$version"
+    wget -P jenkins_plugins "https://xget.xi-xu.me/jenkins/download/plugins/$name/$version/$name.hpi"
+done
+
+echo "所有插件下载完成！"
+EOF
+
+chmod +x download_jenkins_plugins.sh
+./download_jenkins_plugins.sh</code></pre>
+            </div>
+
+            <h4>离线 Jenkins 部署</h4>
+            <p>对于无网络环境的 Jenkins 部署：</p>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 1. 下载 Jenkins 核心文件
+wget https://xget.xi-xu.me/jenkins/war/jenkins.war
+
+# 2. 创建插件打包脚本
+cat > prepare_jenkins_offline.sh << 'EOF'
+#!/bin/bash
+
+# 创建离线部署目录结构
+mkdir -p jenkins_offline/{plugins,update_center}
+
+# 下载更新中心配置
+curl -o jenkins_offline/update_center/update-center.json \
+    https://xget.xi-xu.me/jenkins/update-center.json
+
+# 必备插件列表
+essential_plugins=(
+    "ant:475.vf34069fef73c"
+    "build-timeout:1.31"
+    "credentials:1319.v7eb_51b_3a_c97b_"
+    "git:5.2.1"
+    "github:1.38.0"
+    "gradle:2.8.2"
+    "ldap:682.v7b_544c9d1512"
+    "mailer:463.vedf8358e006b_"
+    "matrix-auth:3.2.2"
+    "maven-plugin:3.27"
+    "pam-auth:1.10"
+    "pipeline-stage-view:2.34"
+    "ssh-slaves:2.973.v0fa_8c0dea_f9f"
+    "timestamper:1.26"
+    "workflow-aggregator:596.v8c21c963d92d"
+    "ws-cleanup:0.45"
+)
+
+# 下载所有必备插件
+for plugin in "${essential_plugins[@]}"; do
+    name=$(echo $plugin | cut -d: -f1)
+    version=$(echo $plugin | cut -d: -f2)
+    echo "下载 $name:$version"
+    wget -P jenkins_offline/plugins \
+        "https://xget.xi-xu.me/jenkins/download/plugins/$name/$version/$name.hpi"
+done
+
+# 创建部署说明
+cat > jenkins_offline/deploy_instructions.md << 'DEPLOY'
+# Jenkins 离线部署说明
+
+1. 将 jenkins.war 复制到目标服务器
+2. 启动 Jenkins：java -jar jenkins.war
+3. 将 plugins/ 目录中的 .hpi 文件复制到 $JENKINS_HOME/plugins/
+4. 重启 Jenkins
+DEPLOY
+
+echo "离线部署包准备完成！"
+EOF
+
+chmod +x prepare_jenkins_offline.sh
+./prepare_jenkins_offline.sh</code></pre></div>
+
+            <h4>在项目中使用</h4>
+<p>Jenkinsfile 中的插件检查</p>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+pipeline {
+    agent any
+
+    stages {
+        stage('Check Plugin Availability') {
+            steps {
+                script {
+                    // 检查 Maven 插件可用性
+                    def pluginUrl = "https://xget.xi-xu.me/jenkins/download/plugins/maven-plugin/3.27/maven-plugin.hpi"
+
+                    try {
+                        def response = httpRequest url: pluginUrl, httpMode: 'HEAD'
+                        if (response.status == 200) {
+                            echo "Maven 插件可用: ${pluginUrl}"
+                        }
+                    } catch (Exception e) {
+                        error "Maven 插件不可用: ${e.message}"
+                    }
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                // 你的构建步骤
+                echo "使用加速后的插件进行构建..."
+            }
+        }
+    }
+}</code></pre>
+            </div>
+</div>
+        <div class="card">
+            <h3>AI 推理 API 加速</h3>
+            <h4>OpenAI API</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+import openai
+
+# 使用 Xget 的 OpenAI API
+client = openai.OpenAI(
+    api_key="your-api-key",
+    base_url="https://xget.xi-xu.me/ip/openai/v1"  # 使用 Xget
+)
+
+# 聊天完成
+response = client.chat.completions.create(
+    model="gpt-4",
+    messages=[
+        {"role": "user", "content": "Hello, how are you?"}
+    ]
+)
+
+print(response.choices[0].message.content)</code></pre>
+            </div>
+
+            <h4>Anthropic API</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+import anthropic
+
+# 使用 Xget 的 Anthropic API
+client = anthropic.Anthropic(
+    api_key="your-api-key",
+    base_url="https://xget.xi-xu.me/ip/anthropic"  # 使用 Xget
+)
+
+# 创建消息
+message = client.messages.create(
+    model="claude-3-sonnet-20240229",
+    max_tokens=1000,
+    messages=[
+        {"role": "user", "content": "Hello, Claude!"}
+    ]
+)
+
+print(message.content)</code></pre></div>
+
+            <h4>Gemini API</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+import google.generativeai as genai
+
+# 配置 API 密钥
+genai.configure(api_key="your-api-key")
+
+# 使用自定义传输配置 Xget
+import requests
+
+class XgetTransport:
+    def __init__(self, base_url):
+        self.base_url = base_url
+
+    def request(self, method, url, **kwargs):
+        # 将请求转发到 Xget
+        accelerated_url = url.replace("https://generativelanguage.googleapis.com",
+                                    "https://xget.xi-xu.me/ip/gemini")
+        return requests.request(method, accelerated_url, **kwargs)
+
+# 创建模型实例
+model = genai.GenerativeModel('gemini-pro')
+
+# 生成内容
+response = model.generate_content("写一个关于人工智能的简短介绍")
+print(response.text)</code></pre>
+            </div>
+            <h4>多提供商统一接口</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+import requests
+import json
+
+def call_ai_api(provider, endpoint, data, api_key):
+    """
+    统一的 AI API 调用函数，支持多个提供商
+    """
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json"
+    }
+
+    # 使用 Xget 的加速 URL
+    url = f"https://xget.xi-xu.me/ip/{provider}/{endpoint}"
+
+    response = requests.post(url, headers=headers, json=data)
+    return response.json()
+
+# 使用示例
+providers = {
+    "openai": {
+        "endpoint": "v1/chat/completions",
+        "data": {
+            "model": "gpt-4",
+            "messages": [{"role": "user", "content": "Hello!"}]
+        }
+    },
+    "anthropic": {
+        "endpoint": "v1/messages",
+        "data": {
+            "model": "claude-3-sonnet-20240229",
+            "max_tokens": 1000,
+            "messages": [{"role": "user", "content": "Hello!"}]
+        }
+    },
+    "cohere": {
+        "endpoint": "v1/generate",
+        "data": {
+            "model": "command",
+            "prompt": "Hello!",
+            "max_tokens": 100
+        }
+    }
+}
+
+# 循环调用不同提供商
+for provider, config in providers.items():
+    try:
+        result = call_ai_api(
+            provider=provider,
+            endpoint=config["endpoint"],
+            data=config["data"],
+            api_key="your-api-key"
+        )
+        print(f"{provider.title()} response: {result}")
+    except Exception as e:
+        print(f"Error calling {provider}: {e}")</code></pre>
+            </div>
+            <h4>JavaScript/Node.js 中使用</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+// OpenAI API 加速
+import OpenAI from 'openai';
+
+const openai = new OpenAI({
+  apiKey: 'your-api-key',
+  baseURL: 'https://xget.xi-xu.me/ip/openai',  // 使用 Xget
+});
+
+async function chatWithGPT() {
+  const completion = await openai.chat.completions.create({
+    messages: [{ role: 'user', content: 'Hello!' }],
+    model: 'gpt-4',
+  });
+
+  console.log(completion.choices[0].message.content);
+}
+
+// Anthropic API 加速
+import Anthropic from '@anthropic-ai/sdk';
+
+const anthropic = new Anthropic({
+  apiKey: 'your-api-key',
+  baseURL: 'https://xget.xi-xu.me/ip/anthropic',  // 使用 Xget
+});
+
+async function chatWithClaude() {
+  const message = await anthropic.messages.create({
+    model: 'claude-3-sonnet-20240229',
+    max_tokens: 1000,
+    messages: [{ role: 'user', content: 'Hello!' }],
+  });
+
+  console.log(message.content);
+}</code></pre></div>
+            <h4>环境变量配置</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 在 .env 文件中配置
+OPENAI_BASE_URL=https://xget.xi-xu.me/ip/openai
+ANTHROPIC_BASE_URL=https://xget.xi-xu.me/ip/anthropic
+GEMINI_BASE_URL=https://xget.xi-xu.me/ip/gemini
+COHERE_BASE_URL=https://xget.xi-xu.me/ip/cohere
+MISTRAL_AI_BASE_URL=https://xget.xi-xu.me/ip/mistralai
+GROQ_BASE_URL=https://xget.xi-xu.me/ip/groq</code></pre>
+            </div>
+            <p>然后在代码中使用：</p>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+import os
+from openai import OpenAI
+
+# 从环境变量读取配置
+client = OpenAI(
+    api_key=os.getenv("OPENAI_API_KEY"),
+    base_url=os.getenv("OPENAI_BASE_URL")  # 自动使用 Xget
+)</code></pre>
+            </div>
+   </div>
+        <div class="card">      
+            <h3>容器镜像加速</h3>
+<h4>Docker 配置</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 配置 Docker 使用 Xget 镜像加速
+# 编辑 /etc/docker/daemon.json（Linux）或 ~/.docker/daemon.json（macOS/Windows）
+{
+  "registry-mirrors": [
+    "https://xget.xi-xu.me/cr/ghcr"
+  ]
+}
+
+# 重启 Docker 服务
+sudo systemctl restart docker  # Linux
+# 或在 Docker Desktop 中重启服务
+
+# 验证配置
+docker info | grep -A 10 "Registry Mirrors"</code></pre>
+            </div>
+            <h4>直接拉取镜像</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 拉取 GitHub 容器注册表镜像
+docker pull xget.xi-xu.me/cr/ghcr/nginxinc/nginx-unprivileged:latest
+
+# 拉取谷歌容器注册表镜像
+docker pull xget.xi-xu.me/cr/gcr/distroless/base:latest
+
+# 拉取微软容器注册表镜像
+docker pull xget.xi-xu.me/cr/mcr/dotnet/runtime:8.0</code></pre>
+            </div>
+
+            <h4>Kubernetes 部署配置</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# deployment.yaml - 使用 Xget 的镜像
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: xget.xi-xu.me/cr/ghcr/nginxinc/nginx-unprivileged:latest
+        ports:
+        - containerPort: 80
+      - name: redis
+        image: xget.xi-xu.me/cr/ghcr/bitnami/redis:alpine
+        ports:
+        - containerPort: 6379</code></pre></div>
+            <h4>Docker Compose 配置</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# docker-compose.yml - 使用 Xget 加速镜像
+version: '3.8'
+services:
+  web:
+    image: xget.xi-xu.me/cr/ghcr/nginxinc/nginx-unprivileged:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./html:/usr/share/nginx/html
+
+  database:
+    image: xget.xi-xu.me/cr/mcr/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: "MyStrongPassword123!"
+    volumes:
+      - mssql_data:/var/opt/mssql
+
+  cache:
+    image: xget.xi-xu.me/cr/ghcr/bitnami/redis:alpine
+    ports:
+      - "6379:6379"
+
+volumes:
+  mssql_data:</code></pre>
+            </div>
+            <h4>Dockerfile 优化</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 在 Dockerfile 中使用 Xget 加速基础镜像
+FROM xget.xi-xu.me/cr/ghcr/nodejs/node:18-alpine AS builder
+
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+
+COPY . .
+RUN npm run build
+
+# 生产阶段
+FROM xget.xi-xu.me/cr/ghcr/nginxinc/nginx-unprivileged:latest
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# 使用微软容器注册表的 .NET 镜像
+FROM xget.xi-xu.me/cr/mcr/dotnet/aspnet:8.0 AS runtime
+WORKDIR /app
+COPY --from=builder /app/publish .
+ENTRYPOINT ["dotnet", "MyApp.dll"]</code></pre>
+            </div>
+
+            <h4>CI/CD 集成</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# GitHub Actions - 使用 Xget 加速容器构建
+name: Build and Deploy
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build with accelerated base images
+        run: |
+          # 构建时使用 Xget 的基础镜像
+          docker build -t myapp:latest \
+            --build-arg BASE_IMAGE=xget.xi-xu.me/cr/ghcr/nodejs/node:18-alpine .
+
+      - name: Test with accelerated images
+        run: |
+          # 使用加速镜像进行测试
+          docker run --rm \
+            xget.xi-xu.me/cr/mcr/dotnet/runtime:8.0 \
+            dotnet --version</code></pre></div>
+            <h4>Podman 配置</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 配置 Podman 使用 Xget 镜像加速
+# 编辑 /etc/containers/registries.conf
+[[registry]]
+prefix = "ghcr.io"
+location = "xget.xi-xu.me/cr/ghcr"
+
+# 或者直接拉取
+podman pull xget.xi-xu.me/cr/ghcr/alpine/alpine:latest
+podman pull xget.xi-xu.me/cr/ghcr/nginxinc/nginx-unprivileged:latest</code></pre>
+            </div>
+            <h4>containerd 配置</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 配置 containerd 使用 Xget
+# 编辑 /etc/containerd/config.toml
+[plugins."io.containerd.grpc.v1.cri".registry.mirrors]
+  [plugins."io.containerd.grpc.v1.cri".registry.mirrors."ghcr.io"]
+    endpoint = ["https://xget.xi-xu.me/cr/ghcr"]
+  [plugins."io.containerd.grpc.v1.cri".registry.mirrors."gcr.io"]
+    endpoint = ["https://xget.xi-xu.me/cr/gcr"]
+</code></pre>
+            </div>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+# 重启 containerd
+sudo systemctl restart containerd
+</code></pre>
+            </div>
+         </div>
+    </div>
+    <script src="js/about.js"></script>
+</body>
+</html>
