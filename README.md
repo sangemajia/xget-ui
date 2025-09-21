@@ -29,3 +29,5 @@ const response = await fetch( "https://xget.xi-xu.me/gh/xixu-me/Xget/raw/refs/he
     );
 
 修改后的域名也记得改成自己的。
+
+about.html文件是提取自xget项目的README.md。对xget的使用方法进行了部分整理，方便查看。
