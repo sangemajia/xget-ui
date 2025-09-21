@@ -7,14 +7,62 @@
     <link rel="stylesheet" href="css/about.css" />
 </head>
 <body>
+    <!-- 左下角导航按钮 -->
+    <div class="bottom-left-nav">
+        <!-- 返回顶部按钮 -->
+        <button class="nav-btn back-to-top" id="backToTopBtn">⬆️</button>
+        
+        <!-- 返回首页按钮 -->
+        <button class="nav-btn" id="backToHomeBtn">🏠</button>
+    </div>
     <div class="container">
         <div class="card">
             <h2>关于 Xget</h2>
-            <p>Xget 是一个高性能、安全的开发者资源访问加速引擎，为开发者提供跨多个平台的统一高效加速体验，涵盖代码存储库、包管理器、AI推理API、容器镜像、模型及数据集等。</p>
+            <p>Xget 是一个高性能、安全的开发者资源访问加速引擎，为开发者提供跨多个平台的统一高效加速体验，涵盖代码存储库、包管理器、AI推理API、容器镜像、模型及数据集等。由
+<a href="https://github.com/xixu-me/Xget">Xget</a>提供支持。</p>
         </div>
+
+        <div class="card">
+            <h2>支持平台</h2>
+        <div class="platform-grid">
+            <div class="platform-item clickable-block" data-target="code-repository">
+                <div class="platform-icon"><h4>📦代码存储库</h4></div>
+
+                <p>GitHub, GitLab, Gitea, Codeberg, SourceForge, AOSP</p>
+<p>常用工具：</p>
+<p>git, wget, curl, aria2</p>
+            </div>
+            
+            <div class="platform-item clickable-block" data-target="package-management">
+                <div class="platform-icon"><h4>🔧包管理器</h4></div>
+                <p>npm, PyPI, Conda, Maven, Apache,  Gradle, Homebrew, RubyGems, R/CRAN, Perl/CPAN, TeX/LaTeX/CTAN, Go, NuGet, Rust, PHP/Packagist</p>
+            </div>
+            
+            <div class="platform-item clickable-block" data-target="ai-platform">
+                <div class="platform-icon"><h4>🤖AI 平台</h4></div>
+                <p>Hugging Face, Civitai, OpenAI, Anthropic, Gemini, Vertex AI, Cohere, Mistral AI, xAI, Github模型, NVIDIA API, Perplexity, Groq, Cerebras, SambaNova	, Together, Replicate, Fireworks, Nebius, 	Jina, Voyage AI, Fal AI	, Novita, Burncloud, OpenRouter, Poe	poe, Featherless, Hyperbolic, JavaScript/Node.js, 多提供商统一接口</p>
+            </div>
+            
+            <div class="platform-item clickable-block" data-target="container-registry">
+                <div class="platform-icon"><h4>🐳容器注册表</h4></div>
+                <p>Docker Hub(暂时不完美兼容）, GHCR, GCR, MCR, ECR, GITLAB, REDHAT, ORACLE, CLOUDSMITH, DIGITAOCEAN, VMWARE, K8S, HEROKU, SUSE, OPENSUSE, GITPOD, Quay.io</p>
+            </div>
+            
+            <div class="platform-item clickable-block" data-target="linux-distros">
+                <div class="platform-icon"><h4>📚Linux 发行版</h4></div>
+                <p>Debian, Ubuntu, Fedora, Rocky Linux, openSUSE, Arch</p>
+            </div>
+            
+            <div class="platform-item clickable-block" data-target="academic-resources">
+                <div class="platform-icon"><h4>📄学术资源</h4></div>
+                <p>arXiv, F-Droid, Jenkins, 各类开源项目</p>
+            </div>
+           </div>
+</div>
         <div class="card">
             <h2>🎯 使用说明</h2>
-            <h3>常用下载工具</h3>
+            <div id="code-repository" class="jump-target">
+            <h3>常用下载工具</h3></div>
             
             <h4>Git 操作</h4>
             <div class="code-block">
@@ -110,79 +158,10 @@ aria2c -c https://xget.xi-xu.me/gh/microsoft/vscode/archive/refs/heads/main.zip
 # 批量下载配置文件
 aria2c -i download-list.txt  # 包含多个 Xget URL 的文件</code></pre>
             </div>
-            <h4>Hugging Face 镜像</h4>
-            <div class="code-block">
-                <button class="copy-btn" onclick="copyCode(this)">复制</button>
-                <pre><code>
-import os
-from transformers import AutoTokenizer, AutoModelForCausalLM
-
-# 设置环境变量，让 transformers 库自动使用 Xget 镜像
-os.environ['HF_ENDPOINT'] = 'https://xget.xi-xu.me/hf'
-
-# 定义模型名称
-model_name = 'microsoft/DialoGPT-medium'
-
-print(f"正在从镜像下载模型: {model_name}")
-
-# 使用 AutoModelForCausalLM 来加载对话生成模型
-# 由于上面设置了环境变量，这里无需添加任何额外参数
-tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = AutoModelForCausalLM.from_pretrained(model_name)
-
-print("模型和分词器加载成功！")
-
-# 你现在可以使用 tokenizer 和 model 了
-# 例如:
-# new_user_input_ids = tokenizer.encode("Hello, how are you?", return_tensors='pt')
-# chat_history_ids = model.generate(new_user_input_ids, max_length=1000, pad_token_id=tokenizer.eos_token_id)
-# print(tokenizer.decode(chat_history_ids[:, new_user_input_ids.shape[-1]:][0], skip_special_tokens=True))</code></pre>
-            </div>
-            <h4>Civitai AI 模型平台</h4>
-            <div class="code-block">
-                <button class="copy-btn" onclick="copyCode(this)">复制</button>
-                <pre><code>
-import requests
-
-# 设置 API 基础 URL 使用 Xget
-base_url = "https://xget.xi-xu.me/civitai"
-
-# 获取模型信息
-def get_model_info(model_id):
-    """获取 Civitai 模型信息"""
-    url = f"{base_url}/api/v1/models/{model_id}"
-    response = requests.get(url)
-    return response.json()
-
-# 下载模型
-def download_model(model_version_id, output_path):
-    """下载 Civitai 模型文件"""
-    download_url = f"{base_url}/api/download/models/{model_version_id}"
-
-    print(f"正在下载模型版本 {model_version_id}...")
-
-    response = requests.get(download_url, stream=True)
-    response.raise_for_status()
-
-    with open(output_path, 'wb') as f:
-        for chunk in response.iter_content(chunk_size=8192):
-            f.write(chunk)
-
-    print(f"模型已下载到: {output_path}")
-
-# 使用示例
-model_id = 7240  # 示例模型 ID
-model_info = get_model_info(model_id)
-print(f"模型名称: {model_info['name']}")
-
-# 下载第一个模型版本
-if model_info['modelVersions']:
-    version_id = model_info['modelVersions'][0]['id']
-    download_model(version_id, f"model_{version_id}.safetensors")</code></pre>
-            </div>
 </div>
         <div class="card">
-            <h3>包管理加速</h3>
+            <div id="package-management" class="jump-target">
+            <h3>包管理加速</h3></div>
             
             <h4>npm 包管理加速</h4>
             <div class="code-block">
@@ -834,7 +813,8 @@ composer config -l</code></pre>
             </div>
 </div>
         <div class="card">
-            <h3>Linux 发行版加速</h3>
+            <div id="linux-distros" class="jump-target">
+            <h3>Linux 发行版加速</h3></div>
 <h4>Debian/Ubuntu APT 配置</h4>
             <div class="code-block">
                 <button class="copy-btn" onclick="copyCode(this)">复制</button>
@@ -911,7 +891,8 @@ sudo pacman -Sy</code></pre>
             </div>
 </div>
         <div class="card">
-            <h3>学术资源加速</h3>
+<div id="academic-resources" class="jump-target">
+            <h3>学术资源加速</h3></div>
 <h4>arXiv 论文下载</h4>
             <div class="code-block">
                 <button class="copy-btn" onclick="copyCode(this)">复制</button>
@@ -1236,7 +1217,79 @@ pipeline {
             </div>
 </div>
         <div class="card">
-            <h3>AI 推理 API 加速</h3>
+            <div id="ai-platform" class="jump-target">
+            <h3>AI 推理 API 加速</h3></div>
+           <h4>Hugging Face 镜像</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+import os
+from transformers import AutoTokenizer, AutoModelForCausalLM
+
+# 设置环境变量，让 transformers 库自动使用 Xget 镜像
+os.environ['HF_ENDPOINT'] = 'https://xget.xi-xu.me/hf'
+
+# 定义模型名称
+model_name = 'microsoft/DialoGPT-medium'
+
+print(f"正在从镜像下载模型: {model_name}")
+
+# 使用 AutoModelForCausalLM 来加载对话生成模型
+# 由于上面设置了环境变量，这里无需添加任何额外参数
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModelForCausalLM.from_pretrained(model_name)
+
+print("模型和分词器加载成功！")
+
+# 你现在可以使用 tokenizer 和 model 了
+# 例如:
+# new_user_input_ids = tokenizer.encode("Hello, how are you?", return_tensors='pt')
+# chat_history_ids = model.generate(new_user_input_ids, max_length=1000, pad_token_id=tokenizer.eos_token_id)
+# print(tokenizer.decode(chat_history_ids[:, new_user_input_ids.shape[-1]:][0], skip_special_tokens=True))</code></pre>
+            </div>
+            <h4>Civitai AI 模型平台</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                <pre><code>
+import requests
+
+# 设置 API 基础 URL 使用 Xget
+base_url = "https://xget.xi-xu.me/civitai"
+
+# 获取模型信息
+def get_model_info(model_id):
+    """获取 Civitai 模型信息"""
+    url = f"{base_url}/api/v1/models/{model_id}"
+    response = requests.get(url)
+    return response.json()
+
+# 下载模型
+def download_model(model_version_id, output_path):
+    """下载 Civitai 模型文件"""
+    download_url = f"{base_url}/api/download/models/{model_version_id}"
+
+    print(f"正在下载模型版本 {model_version_id}...")
+
+    response = requests.get(download_url, stream=True)
+    response.raise_for_status()
+
+    with open(output_path, 'wb') as f:
+        for chunk in response.iter_content(chunk_size=8192):
+            f.write(chunk)
+
+    print(f"模型已下载到: {output_path}")
+
+# 使用示例
+model_id = 7240  # 示例模型 ID
+model_info = get_model_info(model_id)
+print(f"模型名称: {model_info['name']}")
+
+# 下载第一个模型版本
+if model_info['modelVersions']:
+    version_id = model_info['modelVersions'][0]['id']
+    download_model(version_id, f"model_{version_id}.safetensors")</code></pre>
+            </div>
+
             <h4>OpenAI API</h4>
             <div class="code-block">
                 <button class="copy-btn" onclick="copyCode(this)">复制</button>
@@ -1438,8 +1491,9 @@ client = OpenAI(
 )</code></pre>
             </div>
    </div>
-        <div class="card">      
-            <h3>容器镜像加速</h3>
+        <div class="card">
+            <div id="container-registry" class="jump-target">      
+            <h3>容器镜像加速</h3></div>
 <h4>Docker 配置</h4>
             <div class="code-block">
                 <button class="copy-btn" onclick="copyCode(this)">复制</button>
