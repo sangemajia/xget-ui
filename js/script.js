@@ -114,7 +114,7 @@ async function loadPlatforms() {
     showLoading("正在加载平台配置...");
 
     // Fetch platforms.js from the official Xget repository
-    //平台配置文件从xget项目github上获取，如果github不稳定，配合xget修改地址
+    //平台配置文件从xget项目github上获取,假如github不够稳定，可用加速链接，方法看README.md
     const response = await fetch( "https://raw.githubusercontent.com/xixu-me/Xget/refs/heads/main/src/config/platforms.js"
     );
 
